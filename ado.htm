@@ -1,0 +1,558 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>ActiveX Data Objects</title>
+</head>
+
+<body>
+
+<h2 id="ado">ActiveX Data Objects (ADO) </h2>
+<p>To use ADO, you must set the appropriate references by selecting, Project, 
+References, and making sure there's a tick against Microsoft ActiveX Data Object 
+Library. OLE DB provides a set of system-level COM interfaces that provide a 
+method for retrieving data regardless of its format. ADO provides a language 
+independent Automation model to provide access to the OLE DB services. The ADO 
+object model comprises the following seven objects. </p>
+<table class="js" cellSpacing="0" cellPadding="5" summary="Seven ActiveX Data Objects for database connectivity" border="1" style="border-collapse: collapse" bordercolor="#111111">
+  <caption class="js">ADO Objects</caption>
+  <tr>
+    <th class="js">Object</th>
+    <th class="js">Description</th>
+  </tr>
+  <tr>
+    <td class="js">Command</td>
+    <td class="js">The Command object defines the command to be given to a data 
+    source. This may be either a SQL statement or an invokation of a stored 
+    procedure. </td>
+  </tr>
+  <tr>
+    <td class="js">Connection</td>
+    <td class="js">The Command object defines the command to be given to a data 
+    source. This may be either a SQL statement or an invokation of a stored 
+    procedure. </td>
+  </tr>
+  <tr>
+    <td class="js">Connection</td>
+    <td class="js" style="border-bottom-style: none; border-bottom-width: medium">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="js">Error</td>
+    <td class="js" style="border-top-style: none; border-top-width: medium">The 
+    Error object may be used if the OLE DB provider has implemented it. In its 
+    absence, errors are raised in the Visual Basic Err object. </td>
+  </tr>
+  <tr>
+    <td class="js">Field</td>
+    <td class="js">The Field object represents a column in a Recordset object.
+    </td>
+  </tr>
+  <tr>
+    <td class="js">Parameter</td>
+    <td class="js">The Parameter object is implemented as a collection and 
+    stores the parameters to be used by a Command object. </td>
+  </tr>
+  <tr>
+    <td class="js">Property</td>
+    <td class="js">The Property object may be used by the Connection, Command, 
+    Recordset, and Field objects. Each of the objects has a set of unique 
+    properties that either describe or control the behaviour of the object. The 
+    properties may either be built-in, or added to the Properties collection by 
+    the data provider. </td>
+  </tr>
+  <tr>
+    <td class="js">Recordset</td>
+    <td class="js">The Recordset object contains a set of records retrieved from 
+    the Connection object. </td>
+  </tr>
+</table>
+<h2>Cursors</h2>
+<p>The Recordset object fetches data using Cursors, which are used to identify 
+the current position in the result set, and what row will be returned next. The 
+Recordset object supports four cursor types. </p>
+<table class="js" cellSpacing="0" cellPadding="5" summary="The different cursors used with the Recordset Object" border="1" style="border-collapse: collapse" bordercolor="#111111">
+  <caption class="js">Recordset Cursors</caption>
+  <tr>
+    <th class="js">Cursor</th>
+    <th class="js">Constant</th>
+    <th class="js">Description</th>
+  </tr>
+  <tr>
+    <td class="js">Command</td>
+    <td class="js">adOpenDynamic</td>
+    <td class="js">The result set reflects subsequent changes, additions and 
+    deletions by other users. There are no limitations on how the result set may 
+    be navigated. </td>
+  </tr>
+  <tr>
+    <td class="js">Forward-only</td>
+    <td class="js">adOpenForwardOnly</td>
+    <td class="js">The result set reflects subsequent changes, additions and 
+    deletions by other users. The result set may only be navigated in a forward 
+    direction, and may improve performance if you make a single pass through the 
+    result set. If no cursor type is specified, this cursor is used by default.
+    </td>
+  </tr>
+  <tr>
+    <td class="js">Keyset-Driven</td>
+    <td class="js">adOpenKeyset</td>
+    <td class="js">The result set reflects subsequent modifications to data, but 
+    not records added by other users. This cursor prevents access to records 
+    deleted by other users. There are no limitations on how the result set may 
+    be navigated. </td>
+  </tr>
+  <tr>
+    <td class="js">Static</td>
+    <td class="js">adOpenStatic</td>
+    <td class="js">Returns a static set of records that cannot be modified. 
+    Modifications, additions, and deletions to data by other users will not be 
+    seen with this type of cursor. There are no limitations on how the result 
+    set may be naviagted. </td>
+  </tr>
+</table>
+<p>The cursor type is set with the CursorType property of the Recordset object.
+</p>
+<div class="example">
+  <pre>    adoRS.CursorType = adOpenDynamic</pre>
+</div>
+<h2>Opening a Recordset</h2>
+<p>The Open method is used to retrieve a recordset from the database. The method 
+takes four optional parameters, the recordset source, the active connection, the 
+cursor type, the lock type, and options. The following table describes the 
+parameters. </p>
+<table class="js" cellSpacing="0" cellPadding="5" summary="Parameters for opening an ADO Recordset" border="0">
+  <caption class="js">Open Method Parameters</caption>
+  <tr>
+    <th class="js">Parameter</th>
+    <th class="js">Description</th>
+  </tr>
+  <tr>
+    <td class="js">Source</td>
+    <td class="js">The source may be a Command object variable, a SQL statement, 
+    a table, or a stored procedure. In the absence of this parameter, the 
+    recordset will be opened with the value of the Source property of the 
+    Recordset object. </td>
+  </tr>
+  <tr>
+    <td class="js">ActiveConnection</td>
+    <td class="js">The ActiveConnection property may be either a valid 
+    Connection object variable, or a Connction string. In the absence of this 
+    parameter, the recordset will use the ConnectionString property of the 
+    Recordset object. </td>
+  </tr>
+  <tr>
+    <td class="js">CursorType</td>
+    <td class="js">Determines the type of cursor to use with the Recordset, 
+    where the cursor type constants are adOpenDynamic, dOpenForwardOnly, 
+    adOpenKeyset, or adOpenStatic. In the absence of this parameter, the 
+    recordset will use the value of the CursorType property of the Recordset 
+    object. If no value is specified as either a parameter, or in the CursorType 
+    property, adOpenForwardOnly is used by default. </td>
+  </tr>
+  <tr>
+    <td class="js">LockType</td>
+    <td class="js">Determines how to implement concurrent sessions. The 
+    following constants may be used:
+    <table cellSpacing="0" cellPadding="5" summary="Constants for concurrent sessions" border="1">
+      <caption class="js">LockType Constants</caption>
+      <tr>
+        <th>LockType</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>adLockBatchOptimistic</td>
+        <td>Uses an optimisic lock for bacth updates, as opposed to immediate 
+        updates.</td>
+      </tr>
+      <tr>
+        <td>adLockOptimistic</td>
+        <td>Only locks a record when an Update method is called.</td>
+      </tr>
+      <tr>
+        <td>adLockPessimistic</td>
+        <td>Usually locks a record immediately upon editing. </td>
+      </tr>
+      <tr>
+        <td>adLockReadOnly</td>
+        <td>No locking is used as the records are read only. If no value exists, 
+        adLockReadOnly is used by default.</td>
+      </tr>
+    </table>
+    <p>In the absence of this parameter, the recordset will be locked using the 
+    value in the LockType property of the Recordset object. </td>
+  </tr>
+  <tr>
+    <td class="js">Options</td>
+    <td class="js">A constant that indicates how the provider should evaluate 
+    the Source argument if it represents something other than a Command object.
+    <table cellSpacing="0" cellPadding="5" summary="Constants to determine how the provider should evaluate the source argument" border="1">
+      <caption class="js">LockType Constants</caption>
+      <tr>
+        <th>CommandType</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>adCmdText</td>
+        <td>Specifies that the command should be interpreted as text.</td>
+      </tr>
+      <tr>
+        <td>adCmdTable</td>
+        <td>Specifies that the command should use a SQL statement to retrieve 
+        all records from the table specified in Source.</td>
+      </tr>
+      <tr>
+        <td>adCmdTableDirect</td>
+        <td>Specifies that the command should retrieve all records from the 
+        table specified in Source directly.</td>
+      </tr>
+      <tr>
+        <td>adCmdStoredProc</td>
+        <td>Specifies that the value of Source is a stored procedure.</td>
+      </tr>
+      <tr>
+        <td>adCmdUnknown</td>
+        <td>Specifies the type of command in Source is unknown.</td>
+      </tr>
+      <tr>
+        <td>adCommandFile</td>
+        <td>Specifies that the Recordset should be restored from the file named 
+        in Source.</td>
+      </tr>
+      <tr>
+        <td>adExecuteAsync</td>
+        <td>Specifies that the Source should be executed asynchronously.</td>
+      </tr>
+      <tr>
+        <td>adFetchAsync</td>
+        <td>After the initial quantity specified in the CacheSize property is 
+        fetched, remaining rows should be fetched asynchronously.</td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+<p>The following may be used to open a recordset without using any of the 
+properties of the Recordset object. </p>
+<div class="example">
+  <pre>    adoRS.Open strSQL, strConn, adOpenForwardOnly, adLockReadOnly, adCmdText</pre>
+</div>
+<p>The following example uses the Properties to determine how the recordset 
+should be opened, and calls the Open method with no parameters. </p>
+<div class="example">
+  <pre>    <span class="keyword">Dim</span> adoConn <span class="keyword">As New</span> ADODB.Connection
+    <span class="keyword">Dim</span> adoRS <span class="keyword">As New</span> ADODB.Recordset
+    <span class="keyword">Dim</span> strConn <span class="keyword">As String</span>
+    strConn = &quot;Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot;
+    strConn = strConn &amp; &quot;c:\db\music.mdb&quot;
+    adoConn.ConnectionString = strConn
+    adoConn.Open
+    adoRS.Source = &quot;SELECT * FROM CD&quot;
+    adoRS.CursorType = adOpenForwardOnly
+    adoRS.ActiveConnection = adoConn
+    adoRS.Open
+    <span class="keyword">Do While Not</span> adoRS.EOF
+        Debug.Print adoRS.Fields(&quot;Title&quot;).Value
+        adoRS.MoveNext
+    <span class="keyword">Loop</span>
+    adoRS.Close
+    <span class="keyword">Set</span> adoRS = <span class="keyword">Nothing</span>
+    adoConn.Close
+    <span class="keyword">Set</span> adoConn = <span class="keyword">Nothing</span></pre>
+</div>
+<h2 id="recmeth">Navigating Through a Recordset</h2>
+<p>The Move method moves to a record in a database specified by a row number. An 
+optional parameter may be specified to move relative to a bookmark. The 
+following example moves to the fourth record in the Recordset. </p>
+<div class="example">
+  <pre>    adoRS.Move 4</pre>
+</div>
+<h2>MoveFirst</h2>
+<p>The MoveFirst method moves to the first record in the Recordset. </p>
+<div class="example">
+  <pre>    adoRS.MoveFirst</pre>
+</div>
+<h2>MoveLast</h2>
+<p>The MoveLast method moves to the last record in the Recordset. </p>
+<div class="example">
+  <pre>    adoRS.MoveLast</pre>
+</div>
+<h2>MoveNext</h2>
+<p>The MoveNext method moves to the next record in the Recordset. The EOF 
+property should be checked to prevent an error occurring. EOF is set to True if 
+the current record is after the last record in the Recordset. </p>
+<div class="example">
+  <pre>    adoRS.MoveNext
+    <span class="keyword">If</span> adoRS.EOF <span class="keyword">Then</span>
+        adoRS.MovePrevious
+        MsgBox &quot;At last record&quot;, vbInformation, &quot;Database&quot;
+    <span class="keyword">End If</span></pre>
+</div>
+<h2>MovePrevious</h2>
+<p>The MovePrevious method moves to the previous record in the Recordset. The 
+BOF property should be checked to prevent an error occurring. BOF is set to True 
+if the current record is before the first record in the Recordset. </p>
+<div class="example">
+  <pre>    adoRS.MovePrevious
+    <span class="keyword">If</span> adoRS.BOF <span class="keyword">Then</span>
+        adoRS.Recordset.MoveNext
+        MsgBox &quot;At first record&quot;, vbInformation, &quot;Database&quot;
+    <span class="keyword">End If</span></pre>
+</div>
+<h2>Adding Records</h2>
+<p>The AddNew method adds a new record to the end of the Recordset. </p>
+<div class="example">
+  <pre>    adoRS.AddNew</pre>
+</div>
+<h2>Updating Records</h2>
+<p>The Update method saves the contents of the edit buffer to a specified 
+Recordset object. Use after changing data in the current record. </p>
+<div class="example">
+  <pre>    response = MsgBox(&quot;Update this record&quot;, vbYesNo + vbQuestion, &quot;Update&quot;)
+    <span class="keyword">If</span> response = vbYes <span class="keyword">Then</span>
+        adoRS.Update
+    <span class="keyword">Else</span>
+        adoRS.CancelUpdate
+    <span class="keyword">End If</span></pre>
+</div>
+<h2 id="sql">Structured Query Language</h2>
+<p>The Structured Query Language (SQL - pronounced &quot;sequel&quot;) is a very simple 
+language used to manipulate relational databases. You can use SQL to retrieve, 
+insert, update and delete records from relational databases. Clauses may be 
+added to restrict the records that are effected. </p>
+<h2 id="sel">The SQL Select Query</h2>
+<p>The select query is used to retrieve records from a database. The keywords 
+used in a select query are summarised in the following table. </p>
+<table class="js" cellSpacing="0" cellPadding="5" summary="A summary of the keywords that may be used with a select query in SQL" border="0">
+  <caption class="js">Select Keywords</caption>
+  <tr>
+    <th class="js">Keyword</th>
+    <th class="js">Description</th>
+  </tr>
+  <tr>
+    <td class="js">SELECT</td>
+    <td class="js">Retrieves fields from one or more tables.</td>
+  </tr>
+  <tr>
+    <td class="js">FROM</td>
+    <td class="js">Tables containing the fields.</td>
+  </tr>
+  <tr>
+    <td class="js">WHERE</td>
+    <td class="js">Criteria to restrict the records returned.</td>
+  </tr>
+  <tr>
+    <td class="js">GROUP BY</td>
+    <td class="js">Determines how the records should be grouped.</td>
+  </tr>
+  <tr>
+    <td class="js">HAVING</td>
+    <td class="js">Used with GROUP BY to specify the criteria for the grouped 
+    records.</td>
+  </tr>
+  <tr>
+    <td class="js">ORDER BY</td>
+    <td class="js">Criteria for ordering the records.</td>
+  </tr>
+</table>
+<p>The simplest select query is to retrieve all records from a single table. For 
+example, to retrieve all records from the CD table in the music database: </p>
+<div class="example">
+  <pre>    SELECT * FROM CD</pre>
+</div>
+<p>To select specific fields from a table, replace the (*) with a 
+comma-separated list of field names. For example, to select the Artist and Title 
+from the CD table: </p>
+<div class="example">
+  <pre>    SELECT Artist, Title FROM CD</pre>
+</div>
+<p>To limit the records returned according to some criteria, use the WHERE 
+clause. For example, to return all Artists whose name starts with an 'S': </p>
+<div class="example">
+  <pre>    SELECT * FROM CD WERE Artist LIKE 'S*'</pre>
+</div>
+<p>The condition in the WHERE clause can contain the operators &lt;, &gt;, &lt;=, &gt;=, =, 
+&lt;&gt; and LIKE. Multiple clauses are joined together using the logical AND and OR 
+operators. The results of a query are ordered using the ORDER BY clause. The 
+results may be sorted in ascending order using the ASC keyword or descending 
+order using the DESC keyword. For example, to list the artists in ascending 
+order by name: </p>
+<div class="example">
+  <pre>    SELECT * FROM CD ORDER BY Artist ASC</pre>
+</div>
+<p>To list the artists in descending order by name: </p>
+<div class="example">
+  <pre>    SELECT * FROM CD ORDER BY Artist DESC</pre>
+</div>
+<p>The DISTINCT keyword may be used to retrieve unique values from fields where 
+duplicate data may exist. The following example returns a list of unique 
+surnames. </p>
+<div class="example">
+  <pre>    SELECT DISTINCT surname FROM customer ORDER BY surname</pre>
+</div>
+<h2 id="ins">The SQL Insert Statement</h2>
+<p>The insert statement is used to insert records into a table. The keywords 
+used in an insert statement are summarised in the following table. </p>
+<table class="js" cellSpacing="0" cellPadding="5" summary="A summary of the keywords that may be used with an insert query in SQL" border="0">
+  <caption class="js">Insert Keywords</caption>
+  <tr>
+    <th class="js">Keyword</th>
+    <th class="js">Description</th>
+  </tr>
+  <tr>
+    <td class="js">INSERT</td>
+    <td class="js">Inserts data into a table.</td>
+  </tr>
+  <tr>
+    <td class="js">INTO</td>
+    <td class="js">Specifies the table name to insert the data.</td>
+  </tr>
+  <tr>
+    <td class="js">VALUES</td>
+    <td class="js">The data for the fields in the table.</td>
+  </tr>
+</table>
+<p>The following example inserts the data &quot;Gorillaz&quot; and &quot;Debut Album&quot; into the 
+&quot;Band&quot; and &quot;Title&quot; fields of the &quot;CD&quot; table. </p>
+<div class="example">
+  <pre>INSERT INTO CD ([Band], [Title]) VALUES ('Gorillaz', 'Debut Album')</pre>
+</div>
+<p>The next example uses ADO to insert a record into a database. </p>
+<div class="example">
+  <pre>    <span class="keyword">Dim</span> adoConn <span class="keyword">As New</span> ADODB.Connection
+    <span class="keyword">Dim</span> adoCmd <span class="keyword">As New</span> ADODB.Command
+    <span class="keyword">Dim</span> strConn <span class="keyword">As String</span>, strSQL <span class="keyword">As String</span>
+    <span class="comment">' Open a Connection object</span>
+    strConn = &quot;Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot;
+    strConn = strConn &amp; &quot;c:\db\music.mdb&quot;
+    adoConn.ConnectionString = strConn
+    adoConn.Open
+    <span class="comment">' Define a query string</span>
+    strSQL = &quot;INSERT INTO Programming ([Band], [Title]) VALUES ('&quot; 
+    strSQL = strSQL &amp; txtBand.Text &amp; &quot;', '&quot; 
+    strSQL = strSQL &amp; txtTitle.Text &amp; &quot;')&quot;
+    <span class="comment">' Set up the Command object</span>
+    adoCmd.CommandText = strSQL
+    adoCmd.CommandType = adCmdText
+    adoCmd.ActiveConnection = adoConn
+    adoCmd.Execute
+    <span class="comment">' Tidy up</span>
+    <span class="keyword">Set</span> adoCmd = <span class="keyword">Nothing</span>
+    adoConn.Close
+    <span class="keyword">Set</span> adoConn = <span class="keyword">Nothing</span></pre>
+</div>
+<p>Further records may be added to the database using the INSERT Statement with 
+different values. </p>
+<h2 id="upd">The SQL Update Statement</h2>
+<p>The update statement is used to update records in a database. The keywords 
+used in an update statement are summarised in the following table. </p>
+<table class="js" cellSpacing="0" cellPadding="5" summary="A summary of the keywords that may be used with an update query in SQL" border="0">
+  <caption class="js">Update Keywords</caption>
+  <tr>
+    <th class="js">Keyword</th>
+    <th class="js">Description</th>
+  </tr>
+  <tr>
+    <td class="js">UPDATE</td>
+    <td class="js">Updates data in one or more tables.</td>
+  </tr>
+  <tr>
+    <td class="js">SET</td>
+    <td class="js">Specifies the field names to be updates. If the fields belong 
+    to more that one table, the table name should be specified before the field 
+    name. (eg. CD.Artist). </td>
+  </tr>
+  <tr>
+    <td class="js">WHERE</td>
+    <td class="js">Criteria to restrict the records being updated.</td>
+  </tr>
+</table>
+<p>The following example updates all records in the &quot;CD&quot; table where the Band is 
+&quot;JJ73&quot; to &quot;JJ72&quot;. </p>
+<div class="example">
+  <pre>UPDATE CD SET [Band] = 'JJ72' WHERE [Band] = 'JJ73'</pre>
+</div>
+<p>The next example uses ADO to update a record in the database. </p>
+<div class="example">
+  <pre>    <span class="keyword">Dim</span> adoConn <span class="keyword">As New</span> ADODB.Connection
+    <span class="keyword">Dim</span> adoCmd <span class="keyword">As New</span> ADODB.Command
+    <span class="keyword">Dim</span> strConn <span class="keyword">As String</span>, strSQL <span class="keyword">As String</span>
+    <span class="comment">' Open a Connection object</span>
+    strConn = &quot;Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot;
+    strConn = strConn &amp; &quot;c:\db\client.mdb&quot;
+    adoConn.ConnectionString = strConn
+    adoConn.Open
+    <span class="comment">' Define a query string</span>
+    strSQL = &quot;UPDATE customer SET [email]='&quot; 
+    strSQL = strSQL &amp; txtEmail.Text
+    strSQL = strSQL &amp; &quot;' WHERE [CustNo]=&quot; &amp; CInt(txtCustNo.Text)
+    <span class="comment">' Set up the Command object</span>
+    adoCmd.CommandText = strSQL
+    adoCmd.CommandType = adCmdText
+    adoCmd.ActiveConnection = adoConn
+    adoCmd.Execute
+    <span class="comment">' Tidy up</span>
+    <span class="keyword">Set</span> adoCmd = <span class="keyword">Nothing</span>
+    adoConn.Close
+    <span class="keyword">Set</span> adoConn = <span class="keyword">Nothing</span></pre>
+</div>
+<h2 id="del">The SQL Delete Statement</h2>
+<p>The delete statement is used to delete records in a database. The keywords 
+used in a delete statement are summarised in the following table. </p>
+<table class="js" cellSpacing="0" cellPadding="5" summary="A summary of the keywords that may be used with a delete query in SQL" border="0">
+  <caption class="js">Delete Keywords</caption>
+  <tr>
+    <th class="js">Keyword</th>
+    <th class="js">Description</th>
+  </tr>
+  <tr>
+    <td class="js">DELETE</td>
+    <td class="js">Deletes the records in one or more tables.</td>
+  </tr>
+  <tr>
+    <td class="js">FROM</td>
+    <td class="js">Tables containing the records.</td>
+  </tr>
+  <tr>
+    <td class="js">WHERE</td>
+    <td class="js">Criteria to restrict the records deleted.</td>
+  </tr>
+</table>
+<p>The following example deletes the records from the &quot;CD&quot; table where the Band 
+and Title are passed from a Form. </p>
+<p>The following example deletes the record in the &quot;CD&quot; table where the Band is 
+&quot;Trash&quot; and the title of the album is &quot;Deserve To Go&quot;. </p>
+<div class="example">
+  <pre>DELETE FROM CD WHERE [Band]='Trash' AND [Title]='Deserve To Go'</pre>
+</div>
+<p>The next example uses ADO to delete a set of records from a database. </p>
+<div class="example">
+  <pre>    <span class="keyword">Dim</span> adoConn <span class="keyword">As New</span> ADODB.Connection
+    <span class="keyword">Dim</span> adoCmd <span class="keyword">As New</span> ADODB.Command
+    <span class="keyword">Dim</span> strConn <span class="keyword">As String</span>, strSQL <span class="keyword">As String</span>
+    <span class="comment">' Open a Connection object</span>
+    strConn = &quot;Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot;
+    strConn = strConn &amp; &quot;c:\db\active.mdb&quot;
+    adoConn.ConnectionString = strConn
+    adoConn.Open
+    <span class="comment">' Define a query string</span>
+    strSQL = &quot;DELETE FROM ActiveUsers WHERE [Session]='Expired'&quot; 
+    <span class="comment">' Set up the Command object</span>
+    adoCmd.CommandText = strSQL
+    adoCmd.CommandType = adCmdText
+    adoCmd.ActiveConnection = adoConn
+    adoCmd.Execute
+    <span class="comment">' Tidy up</span>
+    <span class="keyword">Set</span> adoCmd = <span class="keyword">Nothing</span>
+    adoConn.Close
+    <span class="keyword">Set</span> adoConn = <span class="keyword">Nothing</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>==========================================THE 
+END================================================</p>
+
+</body>
+
+</html>
